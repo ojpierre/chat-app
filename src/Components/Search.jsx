@@ -37,11 +37,23 @@ const fadeIn = keyframes`
 
 const SearchContainer = styled.div`
   animation: ${fadeIn} 0.5s ease;
+
+  @media (max-width: 768px) {
+    /* Adjust the styles for smaller screens */
+    padding: 5px;
+  }
 `;
 
 const SearchContainerItems = styled.form`
   padding: 10px;
   display: flex;
+
+  @media (max-width: 768px) {
+    /* Adjust the styles for smaller screens */
+    padding: 5px;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -59,6 +71,13 @@ const SearchInput = styled.input`
     outline: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   }
+
+  @media (max-width: 768px) {
+    /* Adjust the styles for smaller screens */
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 `;
 
 const SearchButton = styled.button`
@@ -75,8 +94,12 @@ const SearchButton = styled.button`
   &:hover {
     background-color: #e27c12;
   }
-`;
 
+  @media (max-width: 768px) {
+    /* Adjust the styles for smaller screens */
+    width: 100%;
+  }
+`;
 const UserChat = styled.div`
   padding: 10px;
   display: flex;

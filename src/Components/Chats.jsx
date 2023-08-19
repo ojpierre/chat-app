@@ -55,6 +55,16 @@ const UserChatInfoMsg = styled.p`
   font-family: "Poppins", sans-serif;
 `;
 
+// Apply media query for responsive styling
+const ResponsiveUserChat = styled(UserChat)`
+  @media (max-width: 768px) {
+    padding: 8px;
+    gap: 8px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+`;
+
 const Chats = () => {
   const [chats, setChats] = useState([]);
   const { currentUser } = useContext(AuthContext);
@@ -87,15 +97,21 @@ const Chats = () => {
     <Container>
       {chats &&
         Object.entries(chats).map((chat) => (
-          <UserChat key={chat[0]} onClick={handleSelect(chat[1].userInfo)}>
-            <UserChatImg src={chat[1].userInfo.photoURL} alt="User" />
-            <UserChatInfo>
-              <UserChatInfoName>
-                {chat[1].userInfo.displayName}
-              </UserChatInfoName>
-              <UserChatInfoMsg>{chat[1].lastMessage?.text}</UserChatInfoMsg>
-            </UserChatInfo>
-          </UserChat>
+          <>
+            <ResponsiveUserChat
+              key={chat[0]}
+              onClick={() => handleSelect(chat[1].userInfo)}
+            ></ResponsiveUserChat>
+            <UserChat key={chat[0]} onClick={handleSelect(chat[1].userInfo)}>
+              <UserChatImg src={chat[1].userInfo.photoURL} alt="User" />
+              <UserChatInfo>
+                <UserChatInfoName>
+                  {chat[1].userInfo.displayName}
+                </UserChatInfoName>
+                <UserChatInfoMsg>{chat[1].lastMessage?.text}</UserChatInfoMsg>
+              </UserChatInfo>
+            </UserChat>
+          </>
         ))}
     </Container>
   );

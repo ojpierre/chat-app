@@ -10,6 +10,10 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #f9d8b8;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const HomeContainer = styled.div`
@@ -19,6 +23,12 @@ const HomeContainer = styled.div`
   height: 80%;
   display: flex;
   overflow: hidden;
+
+  @media screen and (max-width: 768px) {
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+  }
 `;
 
 const Home = () => {

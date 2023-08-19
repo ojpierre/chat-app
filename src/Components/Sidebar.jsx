@@ -6,6 +6,10 @@ import Chats from "../Components/Chats.jsx";
 const Container = styled.div`
   flex: 1;
   background-color: #f7941e;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const Sidebar = () => {

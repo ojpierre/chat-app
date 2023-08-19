@@ -142,6 +142,11 @@ const Search = () => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    handleSearch(); // Call the handleSearch function
+  };
+
   const handleSelect = async () => {
     dispatch({ type: "SELECT_USER", payload: user });
     const combinedId =
@@ -184,15 +189,15 @@ const Search = () => {
   return (
     <Container>
       <SearchContainer>
-        <SearchContainerItems>
+        <SearchContainerItems onSubmit={handleSubmit}>
           <SearchInput
             type="text"
             placeholder="Find a user"
-            onKeyDown={handleKey} // Handle "Enter" key press.
+            //onKeyDown={handleKey} // Handle "Enter" key press.
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
-          <SearchButton>Search</SearchButton>
+          <SearchButton type="submit">Search</SearchButton>
         </SearchContainerItems>
       </SearchContainer>
       {err && <SearchError>User not found!</SearchError>}

@@ -20,6 +20,10 @@ const ChatInfo = styled.span`
   padding: 10px;
   color: white;
   font-family: "Poppins", "serif";
+
+  @media screen and (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const ChatInfoName = styled.div``;
@@ -29,6 +33,11 @@ const ChatIcons = styled.i`
   gap: 10px;
   height: 24px;
   cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    gap: 5px;
+    font-size: 16px;
+  }
 `;
 
 const Chat = () => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, storage } from "../firebase";
@@ -96,7 +96,10 @@ const AvatarInput = styled.input`
   margin-right: 0.5rem;
 `;
 
-const FormInputsError = styled.span``;
+const FormInputsError = styled.span`
+  color: red;
+  margin-top: 0.25rem;
+`;
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -104,52 +107,79 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
 
-  const [err, setErr] = useState(false);
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [avatarError, setAvatarError] = useState("");
+  const [generalError, setGeneralError] = useState("");
+
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const displayName = e.target[0].value;
-    const email = e.target[1].value;
-    const password = e.target[2].value;
-    const file = e.target[3].files[0];
+
+    setNameError("");
+    setEmailError("");
+    setPasswordError("");
+    setAvatarError("");
+    setGeneralError("");
+
+    if (!name) {
+      setNameError("Name is required");
+      return;
+    }
+
+    if (!email) {
+      setEmailError("Email is required");
+      return;
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be 6 or more characters");
+      return;
+    } else if (password === "testtest") {
+      setPasswordError("Please choose a more secure password");
+      return;
+    }
+
+    if (!avatar) {
+      setAvatarError("Import a pic for your avatar");
+    }
 
     try {
-      // Create user with email and password
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      // Create a reference to the storage location
-      const storageRef = ref(storage, displayName);
+      const storageRef = ref(storage, name);
 
-      // Uploading the image and waiting for it to complete
       const uploadTask = uploadBytesResumable(storageRef, file);
       await uploadTask;
 
-      // Getting the download URL after the upload is complete
       const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-      // Updating the user profile with the display name and photo URL
       await updateProfile(res.user, {
-        displayName,
+        displayName: name,
         photoURL: downloadURL,
       });
 
-      // Writing user data to Firestore using 'setDoc'
-      console.log("Before setDoc");
       const docRef = doc(db, "users", res.user.uid);
       await setDoc(docRef, {
         uid: res.user.uid,
-        displayName,
+        displayName: name,
         email,
         photoURL: downloadURL,
       });
-      console.log("After setDoc");
+
       await setDoc(doc(db, "userChats", res.user.uid), {});
       navigate("/");
     } catch (err) {
       console.error("Error during registration:", err);
-      setErr(true);
+      setGeneralError("Something went wrong");
     }
   };
+
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     // Process the file or save it to state as needed
@@ -167,18 +197,24 @@ const Register = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          {nameError && <FormInputsError>{nameError}</FormInputsError>}
+
           <Input
             type="email"
             placeholder="Your Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {emailError && <FormInputsError>{emailError}</FormInputsError>}
+
           <Input
             type="password"
             placeholder="Your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {passwordError && <FormInputsError>{passwordError}</FormInputsError>}
+
           <AvatarContainer>
             <AvatarIcon>&#128100;</AvatarIcon>
             <AvatarInput
@@ -186,9 +222,10 @@ const Register = () => {
               accept="image/*"
               onChange={handleAvatarChange}
             />
+            {avatarError && <FormInputsError>{avatarError}</FormInputsError>}
           </AvatarContainer>
           <FormInputsButton type="submit">Sign Up</FormInputsButton>
-          {err && <FormInputsError>Something went wrong</FormInputsError>}
+          {generalError && <FormInputsError>{generalError}</FormInputsError>}
         </FormInputs>
         <InfoContainer>
           So You Do Have an Account? <Link to="/login">Login</Link>

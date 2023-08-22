@@ -1,8 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Container = styled.div`
   background-color: #f9d8b8;
@@ -77,22 +78,34 @@ const InfoContainer = styled.p`
   font-family: "Urbanist", sans-serif;
 `;
 
-const FormInputsError = styled.span``;
+const FormInputsError = styled.div`
+  display: flex;
+  align-items: center;
+  color: red;
+  margin-top: 0.25rem;
+  font-family: "Poppins", sans-serif;
+`;
+
+const ErrorIcon = styled(CloseIcon)`
+  font-size: 1rem;
+  margin-right: 0.25rem;
+`;
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [email, setEmail] = useState("test@test.test");
+  const [password, setPassword] = useState("testtest");
 
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState("");
+
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = e.target[0].value;
-    const password = e.target[1].value;
+    const enteredEmail = e.target[0].value;
+    const enteredPassword = e.target[1].value;
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, enteredEmail, enteredPassword);
       navigate("/");
     } catch (err) {
       console.log("Login error:", err);
@@ -130,7 +143,12 @@ const Login = () => {
         <InfoContainer>
           Don't have an account? <Link to="/register">Sign up</Link>
         </InfoContainer>
-        {err && <FormInputsError>Something went wrong</FormInputsError>}
+        {err && (
+          <FormInputsError>
+            <ErrorIcon />
+            {err}
+          </FormInputsError>
+        )}
       </Wrapper>
     </Container>
   );
